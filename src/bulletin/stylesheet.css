@@ -1,0 +1,31 @@
+/** Stylesheet css file for theme method*/
+
+.root{
+    -fx-font-size: 10pt;
+    -fx-font-family: "monospace";
+    -fx-base: #778899;
+    -fx-background: #000000;
+    -fx-focus-color: #000000;
+}
+ 
+.button1{
+    -fx-text-fill: #f0f8ff;
+    -fx-background-color: #800080;
+    -fx-border-radius: 20;
+    -fx-background-radius: 20;
+    -fx-padding: 5;
+}
+ 
+.button2{
+    -fx-text-fill: #f0f8ff;
+    -fx-background-color: #800080;
+    -fx-border-radius: 20;
+    -fx-background-radius: 20;
+    -fx-padding: 5;
+}
+ 
+.slider{
+    -fx-border-color: white;
+    -fx-border-style: dashed;
+    -fx-border-width: 2;
+}
