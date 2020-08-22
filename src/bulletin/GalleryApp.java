@@ -3,6 +3,7 @@ package bulletin;
 import com.google.gson.*;
 import javafx.scene.layout.*;
 import javafx.scene.control.*;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.text.*;
 import javafx.scene.image.*;
 import javafx.scene.*;
@@ -12,16 +13,13 @@ import javafx.application.*;
 import javafx.geometry.*;
 import javafx.animation.*;
 import javafx.util.*;
-//import com.google.gson.JsonParser;
-//import com.google.gson.JsonElement;
-//import com.google.gson.JsonObject;
-//import com.google.gson.JsonArray;
 import java.net.URL;
+//import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.Runnable;
 import java.util.Random;
 import java.util.Arrays;
-import java.net.URLEncoder;
+//import java.net.URLEncoder;
 
 /**
  * Displays pins from a Pinterest board
@@ -32,8 +30,8 @@ public class GalleryApp extends Application {
 	private Stage stage;
 	private Scene scene;
 	private GridPane tile = new GridPane();;
-	private VBox bigBox;
-	private HBox biggerBox;
+	private VBox container;
+	//private HBox biggerBox;
 	private HBox menu;
 	private HBox toolbar;
 	private TextField search;
@@ -56,15 +54,15 @@ public class GalleryApp extends Application {
 	public void start(Stage stage) {
 		// call create methods and add them to bigBox (the VBox)
 		this.stage = stage;
-		createMenu();
-		createToolbar();
+		createMenu();						//createMenu()->createTheme(),createHelp()
+		createToolbar(); //createToolbar()->convertUrl()->urlTests()
 		createProgressBar();
-		bigBox = new VBox();
-		bigBox.getChildren().addAll(menu, toolbar, tile, bar);
+		container = new VBox();
+		container.getChildren().addAll(menu, toolbar, tile, bar);
 
-		biggerBox = new HBox();
-		biggerBox.getChildren().add(bigBox);
-		scene = new Scene(biggerBox);
+		//biggerBox = new HBox();
+		//biggerBox.getChildren().add(bigBox);
+		scene = new Scene(container);
 		stage.setMaxWidth(640);
 		stage.setMaxHeight(480);
 		stage.setTitle("GalleryApp!");
@@ -158,9 +156,9 @@ public class GalleryApp extends Application {
 		timeline.getKeyFrames().add(keyFrame);
 		timeline.play();
 		pauseButt.setOnAction(e -> play(timeline, pauseButt));
-		Label query = new Label("Search Query");
-		search = new TextField("rock");
-		Button update = new Button("Update Images");
+		//Label query = new Label("Search Query");
+		//search = new TextField("rock");
+		/*Button update = new Button("Update Images");
 		input2 = "rock";// default search query text
 		update.setOnAction(e -> {
 			Runnable r = () -> {
@@ -170,123 +168,21 @@ public class GalleryApp extends Application {
 			Thread t = new Thread(r);
 			t.setDaemon(true);
 			t.start();
-		});
-		// convertUrl(search,tile);//converts url to string
+		});*/
+		convertUrl();//converts url to string
 		toolbar = new HBox();
 		toolbar.setPadding(new Insets(10, 12, 10, 12));
 		toolbar.setSpacing(10);
 		toolbar.setPrefWidth(500);
-		toolbar.getChildren().addAll(pauseButt, query, search, update);
+		toolbar.getChildren().addAll(pauseButt);
 	}
-
+	
 	/**
 	 * Method to create the progress bar
 	 */
 	public void createProgressBar() {
 		HBox progress = new HBox();
 		progress.getChildren().add(bar);
-	}
-
-	/**
-	 * Method to begin converting the url to string and test if it is valid
-	 * 
-	 * @param input the text from the textfield
-	 */
-	public void urlTests(String input) {
-		try { // try catch statements to make sure url is valid
-			input = URLEncoder.encode(input, "UTF-8");
-		} catch (Exception e) {
-			System.out.println("Invalid url");
-		}
-		String link = "https://itunes.apple.com/search?term=";
-		String sUrl = link + input + "&entity=album";
-		URL url = null;
-		try {
-			url = new URL(sUrl);
-		} catch (Exception e) {
-			System.out.println("Invalid url");
-		}
-		try {
-			reader = new InputStreamReader(url.openStream());
-		} catch (Exception e) {
-			System.out.println("Invalid url");
-		}
-	}
-
-	/**
-	 * Method to convert the url into a string
-	 * 
-	 * @param searchBar the textfield in the toolbar
-	 * @param tile      the GridPane of images
-	 */
-
-	public void convertUrl(TextField searchBar, GridPane tile) {
-		input = search.getText();
-		urlTests(input);
-		JsonParser jp = new JsonParser();
-		JsonElement je = jp.parse(reader);
-		JsonObject root = je.getAsJsonObject(); // root of response
-		JsonArray results = root.getAsJsonArray("results"); // "results" array
-		numResults = results.size(); // "results" array size
-		if (numResults < 20) {// if less than 20 show error
-			input = input2;
-			TextField tfield = new TextField(input);
-			Platform.runLater(() -> {
-				Alert alert = new Alert(AlertType.ERROR, "Error");
-				alert.setContentText("Less than 20");
-				alert.show();
-			});
-			convertUrl(tfield, tile);
-			loadImage(array);
-		} else {// if more than 20 call makeArray
-			input2 = input;
-			makeArray(results);
-		}
-	}
-
-	/**
-	 * Method to create an array of distinct string urls.
-	 * 
-	 * @param results the JsonArray from convertUrl
-	 */
-
-	public void makeArray(JsonArray results) {
-		array = new String[numResults];
-		for (int i = 0; i < numResults; i++) {
-			JsonObject result = results.get(i).getAsJsonObject(); // object i in array
-			JsonElement artworkUrl100 = result.get("artworkUrl100"); // artworkUrl100 member
-			if (artworkUrl100 != null) { // member might not exist
-				String artUrl = artworkUrl100.getAsString(); // get member as string
-				array[i] = artUrl; // art array
-			}
-		} // make distinct
-		array = Arrays.stream(array).filter(e -> e != null).distinct().toArray(String[]::new);
-		loadImage(array);
-	}
-
-	/**
-	 * Method to add images to the GridPane
-	 * 
-	 * @param array the array of picture
-	 */
-	public void loadImage(String[] array) {
-		int row = -1;// add images based on row and col
-		int col = 0;
-		double inc = 0;
-		for (int i = 0; i < 20; i++) {
-			if (i % 5 == 0) {
-				row++;
-				col = 0;
-			}
-			Image newImg = new Image(array[i], DEF_HEIGHT, DEF_WIDTH, false, false);
-			ImageView imgView = new ImageView(newImg);
-			pFix(imgView, col, row);
-			inc += .05;
-			pUpdate(inc);
-			stored[i] = array[i];
-			count++;
-			col++;
-		}
 	}
 
 	/**
@@ -339,6 +235,193 @@ public class GalleryApp extends Application {
 			timeline.play();
 		}
 	}
+	
+	/**
+	 * Method to convert the url into a string
+	 * 
+	 * @param searchBar the textfield in the toolbar
+	 * @param tile      the GridPane of images
+	 */
+/*
+	public void convertUrl(TextField searchBar, GridPane tile) {
+		input = search.getText();
+		urlTests(input);
+		JsonParser jp = new JsonParser();
+		JsonElement je = jp.parse(reader);
+		JsonObject root = je.getAsJsonObject(); // root of response
+		JsonArray results = root.getAsJsonArray("results"); // "results" array
+		numResults = results.size(); // "results" array size
+		if (numResults < 20) {// if less than 20 show error
+			input = input2;
+			TextField tfield = new TextField(input);
+			Platform.runLater(() -> {
+				Alert alert = new Alert(AlertType.ERROR, "Error");
+				alert.setContentText("Less than 20");
+				alert.show();
+			});
+			convertUrl(tfield, tile);
+			loadImage(array);
+		} else {// if more than 20 call makeArray
+			input2 = input;
+			makeArray(results);
+		}
+	}*/
+	
+	/**
+	 * CONVERT2
+	 * Method to convert the url into a string
+	 * 
+	 * @param searchBar the textfield in the toolbar
+	 * @param tile      the GridPane of images
+	 */
+
+	public void convertUrl() {
+		//input = search.getText();
+		//urlTests(input);
+		urlTests();
+		/*
+		JsonElement je = JsonParser.parse("https://api.pinterest.com/v3/pidgets/boards/sam6072/Bulletin/pins/");
+		JsonObject root = je.getAsJsonObject();
+		JsonArray results = root.getAsJsonArray("pins");
+		*/
+		JsonParser jp = new JsonParser();
+		JsonElement je = jp.parse(reader);
+		JsonObject root = je.getAsJsonObject(); // root of response
+		//Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		//String prettyJsonString = gson.toJson(je);
+		//System.out.println(prettyJsonString);
+		root = root.getAsJsonObject("data");
+		JsonArray results = root.getAsJsonArray("pins"); // "results" array
+
+		System.out.println(results.size());
+		numResults = results.size(); // "results" array size
+		if (numResults < 20) {// if less than 20 show error
+			input = input2;
+			TextField tfield = new TextField("filler");
+			Platform.runLater(() -> {
+				Alert alert = new Alert(AlertType.ERROR, "Error");
+				alert.setContentText("Less than 20");
+				alert.show();
+			});
+			convertUrl();
+			loadImage(array);
+		} else {// if more than 20 call makeArray
+			input2 = input;
+			makeArray(results);
+		}
+	}
+	/**
+	 * Method to begin converting the url to string and test if it is valid
+	 * 
+	 * @param input the text from the textfield
+	 */
+	
+	public void urlTests() {
+		/*try { // try catch statements to make sure url is valid
+			input = URLEncoder.encode(input, "UTF-8");
+		} catch (Exception e) {
+			System.out.println("Invalid url");
+		}
+		String link = "https://itunes.apple.com/search?term=";
+		String sUrl = link + input + "&entity=album";
+		*/
+		String sUrl = "https://api.pinterest.com/v3/pidgets/boards/sam6072/Bulletin/pins/";
+		URL url = null;
+		try {
+			url = new URL(sUrl);
+		} catch (Exception e) {
+			System.out.println("Invalid url");
+		}
+		try {
+			reader = new InputStreamReader(url.openStream());
+		} catch (Exception e) {
+			System.out.println("Invalid url");
+		}
+
+		
+	}
+	
+	/**
+	 * Method to begin converting the url to string and test if it is valid
+	 * 
+	 * @param input the text from the textfield
+	 */
+	/*
+	public void urlTests(String input) {
+		try { // try catch statements to make sure url is valid
+			input = URLEncoder.encode(input, "UTF-8");
+		} catch (Exception e) {
+			System.out.println("Invalid url");
+		}
+		String link = "https://itunes.apple.com/search?term=";
+		String sUrl = link + input + "&entity=album";
+		URL url = null;
+		try {
+			url = new URL(sUrl);
+		} catch (Exception e) {
+			System.out.println("Invalid url");
+		}
+		try {
+			reader = new InputStreamReader(url.openStream());
+		} catch (Exception e) {
+			System.out.println("Invalid url");
+		}
+	}
+*/
+
+	/**
+	 * Method to create an array of distinct string urls.
+	 * 
+	 * @param results the JsonArray from convertUrl
+	 */
+
+	public void makeArray(JsonArray results) {
+		array = new String[numResults];
+		for (int i = 0; i < numResults; i++) {
+			JsonObject result = results.get(i).getAsJsonObject(); // object i in array
+			result  = result.getAsJsonObject("images");
+			result = result.getAsJsonObject("237x");
+			JsonElement imageUrl = result.get("url"); 
+			//Gson gson = new GsonBuilder().setPrettyPrinting().create();
+			//String prettyJsonString = gson.toJson(imageUrl);
+			//System.out.println(prettyJsonString);
+			
+			if (imageUrl != null) { // member might not exist
+				//System.out.println("IN LOOP");
+				String artUrl = imageUrl.getAsString(); // get member as string
+				array[i] = artUrl; // art array
+				//System.out.println(artUrl);
+			}
+		} // make distinct
+		array = Arrays.stream(array).filter(e -> e != null).distinct().toArray(String[]::new);
+		loadImage(array);
+	}
+
+	/**
+	 * Method to add images to the GridPane
+	 * 
+	 * @param array the array of picture
+	 */
+	public void loadImage(String[] array) {
+		int row = -1;// add images based on row and col
+		int col = 0;
+		double inc = 0;
+		for (int i = 0; i < 20; i++) {
+			if (i % 5 == 0) {
+				row++;
+				col = 0;
+			}
+			Image newImg = new Image(array[i], DEF_HEIGHT, DEF_WIDTH, false, false);
+			ImageView imgView = new ImageView(newImg);
+			pFix(imgView, col, row);
+			inc += .05;
+			pUpdate(inc);
+			stored[i] = array[i];
+			count++;
+			col++;
+		}
+	}
+
 
 	/**
 	 * Method to update progress bar
