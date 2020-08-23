@@ -1,6 +1,35 @@
 /** Stylesheet css file for theme method*/
 
 .root{
+	-fx-background-image: url("TieDye2.jpg");
+}
+.button {
+	-fx-box-shadow:inset 0px 1px 0px 0px #ffffff;
+	-fx-background:linear-gradient(to bottom, #f9f9f9 5%, #e9e9e9 100%);
+	-fx-background-color:#f9f9f9;
+	-fx-border-radius:6px;
+	-fx-border:1px solid #dcdcdc;
+	-fx-display:inline-block;
+	-fx-cursor:pointer;
+	-fx-color:#666666;
+	-fx-font-family:Arial;
+	-fx-font-size:15px;
+	-fx-font-weight:bold;
+	-fx-padding:6px 24px;
+	-fx-text-decoration:none;
+	-fx-text-shadow:0px 1px 0px #ffffff;
+}
+.button:hover {
+	-fx-background:linear-gradient(to bottom, #e9e9e9 5%, #f9f9f9 100%);
+	-fx-background-color:#e9e9e9;
+}
+.button:active {
+	-fx-position:relative;
+	-fx-top:1px;
+}
+
+/*
+.root{
     -fx-font-size: 10pt;
     -fx-font-family: "monospace";
     -fx-base: #778899;
@@ -29,3 +58,4 @@
     -fx-border-style: dashed;
     -fx-border-width: 2;
 }
+*/

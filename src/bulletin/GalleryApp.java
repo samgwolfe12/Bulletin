@@ -58,6 +58,8 @@ public class GalleryApp extends Application {
 		createToolbar(); //createToolbar()->convertUrl()->urlTests()
 		createProgressBar();
 		container = new VBox();
+		container.setPrefWidth(500);// prefWidth
+		container.setPrefHeight(550);// prefHeight
 		container.getChildren().addAll(menu, toolbar, tile, bar);
 
 		//biggerBox = new HBox();
@@ -65,7 +67,7 @@ public class GalleryApp extends Application {
 		scene = new Scene(container);
 		stage.setMaxWidth(640);
 		stage.setMaxHeight(480);
-		stage.setTitle("GalleryApp!");
+		stage.setTitle("My Bulletin");
 		stage.setScene(scene);
 		stage.sizeToScene();
 		stage.setMaximized(true);
@@ -127,7 +129,7 @@ public class GalleryApp extends Application {
 		theme.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {// call css file
-				scene.getStylesheets().add("file:src/main/java/bulletin/stylesheet.css");
+				scene.getStylesheets().add("file:src/bulletin/stylesheet.css");
 				stage.setScene(scene);
 				stage.show();
 			}
