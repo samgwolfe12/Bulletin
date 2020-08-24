@@ -1,0 +1,16 @@
+/** Stylesheet css file for theme method*/
+
+
+.root{
+	-fx-background-image: url("TieDye2.jpg");
+}
+
+.button,
+.menu-button{
+	-fx-font-family: "Courier New";
+	-fx-font-weight: bold;
+}
+
+.menu-button .arrow {
+    -fx-background-color: transparent;
+}

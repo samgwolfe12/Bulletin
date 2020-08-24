@@ -1,0 +1,16 @@
+.root{
+	-fx-background-image: url("space.jpg");
+}
+
+.button,
+.menu-button{
+	-fx-font-family: "Courier New";
+	-fx-background-color: rgb(210, 250, 247);
+	-fx-color: white;
+	-fx-font-weight: bold;
+	-fx-padding-right: 5px;
+}
+
+.menu-button .arrow {
+    -fx-background-color: transparent;
+}

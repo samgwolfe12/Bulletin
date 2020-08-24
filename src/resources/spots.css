@@ -1,0 +1,14 @@
+.root{
+	-fx-background-image: url("spots.jpg");
+}
+
+.button,
+.menu-button{
+	-fx-font-family: "Courier New";
+	-fx-background-color: rgb(245, 223, 242);
+	-fx-font-weight: bold;
+}
+
+.menu-button .arrow {
+    -fx-background-color: transparent;
+}
