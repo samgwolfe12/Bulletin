@@ -1,7 +1,6 @@
 # Bulletin
 
-This project is based off of a CSCI 1302 project to create a gallery of album covers using the iTunes API and JavaFX.
-I have adapted it to instead, pull pictures from my personal Pinterest board and display them.
+This goal of this project is to create a gallery of pictures from a Pinterest board using the Pinterest API and JavaFX.
 20 pictures are displayed at once, and every 2 seconds one picture is replaced with a new one.
 Features include:
 - A File button to exit the program
