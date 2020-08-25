@@ -35,7 +35,7 @@ public class BulletinApp extends Application {
 	private String input2;
 	private String[] stored = new String[20];
 	private String[] array;
-	private ProgressBar bar = new ProgressBar();
+	//private ProgressBar bar = new ProgressBar();
 	private InputStreamReader reader = null;
 
 	/** Default height and width for Images */
@@ -78,14 +78,17 @@ public class BulletinApp extends Application {
 		createInfo(menuButton2);									// call createInfo method to build new menu 
 		menuButton.getItems().addAll(exit);
 		
-		Button pauseButton = new Button("Pause");
 		EventHandler<ActionEvent> handle = event -> update(tile, array);
 		KeyFrame keyFrame = new KeyFrame(Duration.seconds(2), handle);  // updates the tile every 2 sec
 		Timeline timeline = new Timeline(); 							// sets up timeline that stops when pause is pressed
 		timeline.setCycleCount(Timeline.INDEFINITE);
 		timeline.getKeyFrames().add(keyFrame);
 		timeline.play();
-		pauseButton.setOnAction(e -> play(timeline, pauseButton));
+		
+		Button pauseButton = new Button("Pause");
+		EventHandler<ActionEvent> pp = event -> play(timeline,pauseButton);
+		pauseButton.setOnAction(pp);
+		
 		pauseButton.setTranslateX(250);
 		
 		menu = new HBox();
@@ -101,8 +104,8 @@ public class BulletinApp extends Application {
 		Image samPic = new Image("https://pbs.twimg.com/profile_images/" + "1114024663418580993/TsVZiMqp_400x400.jpg");
 		ImageView samView = new ImageView(samPic);
 		Text name = new Text("Sam Wolfe");
-		Text email = new Text("sgw73466@uga.edu");
-		Text vers = new Text("Version 678314");
+		Text email = new Text("email: sgw73466@uga.edu");
+		Text vers = new Text("github: samgwolfe12");
 		samBox.getChildren().addAll(samView, name, email, vers);
 		EventHandler<ActionEvent> helping = event -> {    			// when clicked, menu item opens new window
 			Scene scene = new Scene(samBox);
@@ -126,7 +129,8 @@ public class BulletinApp extends Application {
 		MenuItem spots = new MenuItem("Spots");
 		theme.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
-			public void handle(ActionEvent e) {					// call css file
+			public void handle(ActionEvent e) {		
+				scene.getStylesheets().clear();
 				scene.getStylesheets().add("file:src/resources/space.css");
 				stage.setScene(scene);
 				stage.show();
@@ -134,7 +138,8 @@ public class BulletinApp extends Application {
 		});
 		spots.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
-			public void handle(ActionEvent e) {					// call css file
+			public void handle(ActionEvent e) {	
+				scene.getStylesheets().clear();
 				scene.getStylesheets().add("file:src/resources/spots.css");
 				stage.setScene(scene);
 				stage.show();
@@ -143,6 +148,7 @@ public class BulletinApp extends Application {
 		basic.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
+				scene.getStylesheets().clear();
 				scene.getStylesheets().add("file:src/resources/stylesheet.css");
 				stage.setScene(scene);
 				stage.show();
@@ -203,12 +209,12 @@ public class BulletinApp extends Application {
 	 * @param timeline  the Timeline object
 	 * @param pauseButt the play/pause button
 	 */
-	public void play(Timeline timeline, Button pauseButt) {
-		if (pauseButt.getText().equals("pause")) {// what to do if paused
-			pauseButt.setText("Play");
+	public void play(Timeline timeline, Button pauseButton) {
+		if (pauseButton.getText().equals("Pause")) {// what to do if paused
+			pauseButton.setText("Play");
 			timeline.pause();
-		} else if (pauseButt.getText().equals("Play")) {// what to do if playing
-			pauseButt.setText("Pause");
+		} else if (pauseButton.getText().equals("Play")) {// what to do if playing
+			pauseButton.setText("Pause");
 			timeline.play();
 		}
 	}
@@ -216,9 +222,6 @@ public class BulletinApp extends Application {
 	
 	/**
 	 * Method to convert the url into a string
-	 * 
-	 * @param searchBar the textfield in the toolbar
-	 * @param tile      the GridPane of images
 	 */
 
 	public void convertUrl() {
@@ -247,8 +250,6 @@ public class BulletinApp extends Application {
 	
 	/**
 	 * Method to begin converting the url to string and test if it is valid
-	 * 
-	 * @param input the text from the textfield
 	 */
 	
 	public void urlTests() {
@@ -281,19 +282,19 @@ public class BulletinApp extends Application {
 			result  = result.getAsJsonObject("images");
 			result = result.getAsJsonObject("237x");
 			JsonElement imageUrl = result.get("url"); 
-			if (imageUrl != null) { // member might not exist
-				String artUrl = imageUrl.getAsString(); // get member as string
+			if (imageUrl != null) { 					// if element exists
+				String artUrl = imageUrl.getAsString(); // get url as string
 				array[i] = artUrl; // art array
 			}
-		} // make distinct
-		array = Arrays.stream(array).filter(e -> e != null).distinct().toArray(String[]::new);
+		}
+		array = Arrays.stream(array).filter(e -> e != null).distinct().toArray(String[]::new);   // make distinct
 		loadImage(array);
 	}
 
 	/**
 	 * Method to add images to the GridPane
 	 * 
-	 * @param array the array of picture
+	 * @param array the array of pictures
 	 */
 	public void loadImage(String[] array) {
 		int row = -1;// add images based on row and col
