@@ -1,7 +1,7 @@
 package bulletin;
 
 import javafx.application.Application;
-import bulletin.GalleryApp;
+import bulletin.BulletinApp;
 
 /** 
  * Driver for the {@code GalleryApp} class.
